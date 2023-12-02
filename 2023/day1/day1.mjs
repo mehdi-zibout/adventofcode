@@ -1,6 +1,9 @@
 import { promises as fs } from "fs";
 
-const calibrationDocument = await fs.readFile("./2023/document.txt", "utf8");
+const calibrationDocument = await fs.readFile(
+  "./2023/day1/document.txt",
+  "utf8"
+);
 
 /* --- PART 1 --- */
 
@@ -64,11 +67,12 @@ function replaceLineDigitsByNumber(line) {
   const indices = [];
   digits.forEach((digit) => {
     [...newLine.matchAll(digit)].forEach((a) => {
-      indices.push({ index: a.index, digit });
+      if (a.index > 0) {
+        indices.push({ index: a.index, digit });
+      }
     });
   });
   indices
-    .filter((a) => a.index >= 0)
     .sort((a, b) => a.index - b.index)
     .forEach(({ digit }) => {
       newLine = newLine.replace(digit, digitToNumber(digit));
