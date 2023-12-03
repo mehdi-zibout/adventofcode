@@ -68,9 +68,8 @@ const answer = parsedInput
         minBlue = set.blue;
       }
     });
-    return { minRed, minGreen, minBlue };
+    return minRed * minGreen * minBlue;
   })
-  .map((game) => game.minRed * game.minGreen * game.minBlue)
   .reduce((p, c) => p + c, 0);
 
 console.log(answer);
