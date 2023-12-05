@@ -64,21 +64,18 @@ function sourceToDistination(number, type) {
   return number;
 }
 
-function getLocations(seeds) {
-  return seeds.map((seed) => {
-    types.forEach((type) => {
-      seed = sourceToDistination(seed, type);
-    });
-    return seed;
+function seedToLocation(seed) {
+  types.forEach((type) => {
+    seed = sourceToDistination(seed, type);
   });
+  return seed;
 }
-const locations = getLocations(seeds);
+
+const locations = seeds.map((seed) => seedToLocation(seed));
 
 console.log(Math.min(...locations));
 
 /* --- Part Two --- */
-
-const partTwoSeeds = [];
 
 const rangedSeeds = seeds
   .map((seed, index) => {
@@ -86,3 +83,38 @@ const rangedSeeds = seeds
     return { start: seed, length: seeds[index + 1] };
   })
   .filter(Boolean);
+
+function distinationToSource(number, type) {
+  for (const line of maps[type].toReversed()) {
+    if (number >= line[0] && number <= line[0] + line[2]) {
+      return number - line[0] + line[1];
+    }
+  }
+  return number;
+}
+
+function locationToSeed(location) {
+  let seed = location;
+  types.toReversed().forEach((type) => {
+    seed = distinationToSource(seed, type);
+  });
+  return seed;
+}
+let location = 0;
+while (true) {
+  const seed = locationToSeed(location);
+  if (isWithinSeedsRange(seed)) {
+    console.log("seed:", seed, "location:", location);
+    break;
+  }
+  location++;
+}
+
+function isWithinSeedsRange(seed) {
+  for (const seedRange of rangedSeeds) {
+    if (seed >= seedRange.start && seed < seedRange.start + seedRange.length) {
+      return true;
+    }
+  }
+  return false;
+}
